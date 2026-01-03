@@ -42,12 +42,24 @@ class PongGame:
         if winner:
             self.end_game(winner)
             return
+        
+        if ball_pos[0] <=0:
+            self.end_game("Red")
+            return
+        if ball_pos[2] >= self.width:
+            self.end_game("Blue")
+            return
 
         if ball_pos[1] <= 0 or ball_pos[3] >= self.height:
             self.ball_speed_y *= -1
 
         if self.check_collision(ball_pos, self.left_paddle) or self.check_collision(ball_pos, self.right_paddle):
             self.ball_speed_x *= -1
+
+            if ball_pos[0] < self.width / 2:
+                self.canvas.move(self.ball, 5, 0)
+            else:
+                self.canvas.move(self.ball, -5, 0)
 
         if ball_pos[0] <= 0 or ball_pos[2] >= self.width:
             self.canvas.coords(self.ball, 290, 190, 310, 210)
@@ -73,7 +85,8 @@ class PongGame:
             self.width / 2,
             self.height / 2,
             font=("Arial", 30),
-            text="{winner} WINS!"
+            fill= "white", 
+            text=f"{winner} WINS!"
         )
         self.game_over = True
 
@@ -91,4 +104,5 @@ if __name__ == "__main__":
     game_root.mainloop()
 
 #Add on to this game - if the ball touches one of the corners, then the game ends
+
 #And one player is declared the winner - red or blue
